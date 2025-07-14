@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detalhes do Produto - Shopora</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; }
+    header {
+      background: #232f3e;
+      padding: 1rem 2rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 { margin: 0; font-weight: 700; font-size: 1.8rem; cursor: pointer; }
+    header nav a {
+      color: white;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    header nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    img {
+      max-width: 400px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .info {
+      flex: 1;
+    }
+    h2 {
+      margin-top: 0;
+      color: #111;
+    }
+    p.descricao {
+      color: #444;
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+    .preco {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #b12704;
+      margin: 1rem 0;
+    }
+    button {
+      background: #1e88e5;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #1565c0;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1 onclick="window.location.href='index.html'">Shopora</h1>
+  <nav>
+    <a href="checkout.html">Carrinho</a>
+  </nav>
+</header>
+
+<main>
+  <img id="img-produto" src="" alt="Produto" />
+  <div class="info">
+    <h2 id="nome-produto"></h2>
+    <p class="descricao" id="descricao-produto"></p>
+    <div class="preco" id="preco-produto"></div>
+    <button id="btn-adicionar">Adicionar ao Carrinho</button>
+  </div>
+</main>
+
+<script>
+  // Mesma lista de produtos do index.html
+  const produtos = [
+    {
+      id: 1,
+      nome: "Tênis Esportivo RunFast",
+      descricaoCurta: "Conforto e performance para sua corrida.",
+      preco: 249.90,
+      imagem: "https://images.unsplash.com/photo-1528701800489-92aef145ae47?auto=format&fit=crop&w=400&q=80",
+      descricaoCompleta: "Tênis Esportivo RunFast, ideal para corredores, com amortecimento avançado e solado antiderrapante."
+    },
+    {
+      id: 2,
+      nome: "Smartphone Ultra X10",
+      descricaoCurta: "Tela grande, câmera excelente, bateria para o dia todo.",
+      preco: 1599.00,
+      imagem: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80",
+      descricaoCompleta: "Smartphone Ultra X10 com processador rápido, 128GB, câmera tripla de 48MP e tela AMOLED."
+    },
+    {
+      id: 3,
+      nome: "Fone de Ouvido Wireless Pro",
+      descricaoCurta: "Som cristalino sem fios, bateria longa duração.",
+      preco: 399.00,
+      imagem: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
+      descricaoCompleta: "Fone Wireless Pro com cancelamento de ruído, microfone integrado e carregamento rápido."
+    },
+    {
+      id: 4,
+      nome: "Mochila Urban Style",
+      descricaoCurta: "Estilo e resistência para o dia a dia.",
+      preco: 199.90,
+      imagem: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80",
+      descricaoCompleta: "Mochila Urban Style com vários compartimentos, resistente à água e alças ergonômicas."
+    }
+  ];
+
+  // Pega o id do produto da URL (?id=)
+  const urlParams = new URLSearchParams(window.location.search);
+  const idProduto = Number(urlParams.get('id'));
+
+  const produto = produtos.find(p => p.id === idProduto);
+
+  if (!produto) {
+    document.body.innerHTML = '<h2 style="text-align:center; margin-top:50px;">Produto não encontrado</h2>';
+  } else {
+    document.getElementById('img-produto').src = produto.imagem;
+    document.getElementById('img-produto').alt = produto.nome;
+    document.getElementById('nome-produto').textContent = produto.nome;
+    document.getElementById('descricao-produto').textContent = produto.descricaoCompleta;
+    document.getElementById('preco-produto').textContent = `R$ ${produto.preco.toFixed(2)}`;
+  }
+
+  // Função para adicionar produto ao carrinho no localStorage
+  document.getElementById('btn-adicionar').addEventListener('click', () => {
+    let carrinho = JSON.parse(localStorage.getItem('carrinhoShopora')) || [];
+    // Verifica se produto já está no carrinho
+    const existe = carrinho.find(item => item.id === produto.id);
+    if (existe) {
+      // Se já tem, incrementa a quantidade
+      existe.quantidade++;
+    } else {
+      carrinho.push({ id: produto.id, nome: produto.nome, preco: produto.preco, quantidade: 1 });
+    }
+    localStorage.setItem('carrinhoShopora', JSON.stringify(carrinho));
+    alert('Produto adicionado ao carrinho!');
+  });
+</script>
+
+</body>
+</html>
